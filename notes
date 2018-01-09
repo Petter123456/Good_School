@@ -1,0 +1,129 @@
+This is notes
+
+
+MIGRATION
+
+Add colum: rails g migration AddEmailFromUser email
+remove column: rails g migration RemoveEmailFromUser email
+migration: rake db:migrate
+reverse last migration: rake db:rollback
+Delete specific migration:rake db:migrate VERSION=20180108182044_add_age_to_user
+Whipe database/re-create an empty one /migrate all: rake db:drop db:create db:migrate
+See which migration you are on: rake db:version
+
+
+it is possible to add which data type this should be ex:
+
+unique (this has to be unique)
+primary_key
+decimal
+float
+boolean
+string
+text
+time
+datetime
+timestamp
+
+Ex: rails g migration RemoveEmailFromUser email:string
+
+-------------------------------------------------------------------------------------
+CONNECT TO DATABASE
+
+connect to database: rails db
+exit: .exit
+--------------------------------------------------------------------------------------
+IRREVERSABLE ROLLBACKS
+
+
+ When you get the error above on rake db:migrate. Then you can change your method in the mgiration to name up (if you migrate up) and add a new method named down and add the change you want to make but)
+
+See example below:
+
+class ChangeEmailNotNullOnUser < ActiveRecord::Migration[5.1]
+
+  def up
+    change_column :users, :email, :string, null: false
+  end
+end
+
+  def down
+    change_column :users, :email, :string, null: true
+  end
+end
+
+-------------------------------------------------------------------------------------------
+
+FOREIGN KEYS & Query database
+
+profile ---- User >--- CodeSchool
+
+OneToOne relationship - belongs_to
+OneToSeveral relationship - has_many
+OneToSeveralThroug - exempelvis: has_many :projects, through: :Users
+
+variable = Table(exempelvis:Users,CodeSchool,Profile).create(specification_name:datatype("string"/integer"))
+variable.errors.full_messages - shows you the errors if any
+
+me = user
+you = student
+my_profile = profile
+
+my_profile.user
+
+wyncode.students << you
+
+wyncode.students.size --give us the amount of students(users) in the database through CodeSchool
+
+wyncode.students[1].profile ---Going from codeschool to profile through the user
+
+------------------------------------------------------------------
+ADDED NEW MODEL PROJECTS
+
+pr.errors.full_messages
+pr = Project.create(user: User.last)
+
+
+------------------------------------------------------------------------------------
+
+POLYMORFIC ASSOCIATION = clusters tables in a belongs_to/has_many
+
+Scenario:
+
+photo belongs_to
+
+User has_many
+product  has_many
+Location  has_many
+
+photoables
+
+
+--------------------------------------------------------------------------------------
+
+SELF ASSOCIATIONS
+
+Employee has_many && belongs_to employees || Famly_member has_many && belongs_to  family_members || Comment has_many && belongs_to Comments (Facebook Comments)
+
+---------------------------------------------------------------------------------------------
+
+SCOPES
+
+A certain location that you can preset and reference.
+
+ex: scope :wyncoders, -> {where(code_school: CodeSchool.find_by(name:'wyncode')) }
+
+------------------------------------------------------------------------
+JBUILDER
+
+http://localhost:3000/users.json -- API structure for our webpage. Big hash, same as nhl stats.
+
+-----------------------------------------------------------------------
+RENDER PARTIALS
+
+
+Examples:
+
+<%= render partial: "account" %>
+
+<%= render 'users_list' %>
